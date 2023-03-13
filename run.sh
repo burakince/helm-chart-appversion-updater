@@ -21,15 +21,13 @@ DEBUG_MODE="${PLUGIN_DEBUG:-false}"
 
 URL="${PLUGIN_SSH_URL:?SSH URL empty or unset}"
 
-if compgen -G "~/.ssh/id_rsa" > /dev/null; then
-  SSH_KEY="${PLUGIN_SSH_KEY:?SSH Key empty or unset}"
-  echo -n "$SSH_KEY" > ~/.ssh/id_rsa
-  chmod 600 ~/.ssh/id_rsa
+SSH_KEY="${PLUGIN_SSH_KEY:?SSH Key empty or unset}"
+echo -n "$SSH_KEY" > ~/.ssh/id_rsa
+chmod 600 ~/.ssh/id_rsa
 
-  if [ "$DEBUG_MODE" = true ] ; then
-    cat  ~/.ssh/id_rsa
-    ls -al  ~/.ssh/
-  fi
+if [ "$DEBUG_MODE" = true ] ; then
+  cat  ~/.ssh/id_rsa
+  ls -al  ~/.ssh/
 fi
 
 HOSTNAME=""
@@ -48,9 +46,9 @@ if [[ $URL =~ $REGEX ]]; then
   if [ "$DEBUG_MODE" = true ] ; then
     echo $protocol
     echo $separator
-    echo $hostname
-    echo $user
-    echo $repo
+    echo $HOSTNAME
+    echo $USER
+    echo $REPOSITORY
   fi
 
   if [ "$protocol" != "git" ]; then
