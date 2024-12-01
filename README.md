@@ -4,19 +4,19 @@ Helm Chart AppVersion and Chart version updater DroneCI Plugin
 
 ## Environment Variables
 
-| Env Variable                | Description               | Required | Default           |
-| --------------------------- | ------------------------- | -------- | ----------------- |
-| PLUGIN_SSH_URL              | Repository SSH URL        | Yes      |                   |
-| PLUGIN_SSH_KEY              | SSH Private Key           | Yes      |                   |
-| PLUGIN_NAME                 | Git user name             | Yes      |                   |
-| PLUGIN_EMAIL                | Git user email            | Yes      |                   |
-| PLUGIN_IMAGE_TAG            | New image tag             | Yes      |                   |
-| PLUGIN_CHART_PATH           | Helm Chart path           | Yes      |                   |
-| PLUGIN_DEBUG                | Enable debug mode         | No       | false             |
-| PLUGIN_TEST                 | Enable test mode          | No       | false             |
-| PLUGIN_SSH_FOLDER           | Git SSH Folder            | No       | ~/.ssh            |
-| PLUGIN_SSH_PRIVATE_KEY_FILE | SSH PK file name          | No       | ~/ssh/id_rsa      |
-| PLUGIN_KNOWN_HOSTS_FILE     | SSH Known Hosts file name | No       | ~/ssh/known_hosts |
+| Env Variable                | Description               | Required | Default               |
+| --------------------------- | ------------------------- | -------- | --------------------- |
+| PLUGIN_SSH_URL              | Repository SSH URL        | Yes      |                       |
+| PLUGIN_SSH_KEY              | SSH Private Key           | Yes      |                       |
+| PLUGIN_NAME                 | Git user name             | Yes      |                       |
+| PLUGIN_EMAIL                | Git user email            | Yes      |                       |
+| PLUGIN_IMAGE_TAG            | New image tag             | Yes      |                       |
+| PLUGIN_CHART_PATH           | Helm Chart path           | Yes      |                       |
+| PLUGIN_DEBUG                | Enable debug mode         | No       | false                 |
+| PLUGIN_TEST                 | Enable test mode          | No       | false                 |
+| PLUGIN_SSH_FOLDER           | Git SSH Folder            | No       | /root/.ssh            |
+| PLUGIN_SSH_PRIVATE_KEY_FILE | SSH PK file name          | No       | /root/ssh/id_rsa      |
+| PLUGIN_KNOWN_HOSTS_FILE     | SSH Known Hosts file name | No       | /root/ssh/known_hosts |
 
 ## Image Usage
 
