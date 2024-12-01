@@ -20,7 +20,7 @@ Helm Chart AppVersion and Chart version updater DroneCI Plugin
 
 ## Image Usage
 
-```
+```bash
 docker run \
   -e PLUGIN_SSH_URL="git@gitea-ssh.gitea.svc.cluster.local:myuser/my-argocd-tracked-helm-chart-repo" \
   -e PLUGIN_SSH_KEY="myPrivateSshKey"
@@ -33,13 +33,15 @@ docker run \
 
 ## [Drone CI](https://www.drone.io/) or [Woodpecker CI](https://woodpecker-ci.org/) Plugin Usage
 
-```
+You can use it with your [Gitea](https://github.com/go-gitea/gitea) git server as below.
+
+```yaml
 kind: pipeline
 name: default
 
 steps:
   - name: update-chart-appversion
-    image: burakince/helm-chart-appversion-updater:1.0.0
+    image: burakince/helm-chart-appversion-updater:1.1.0
     pull: if-not-exists
     settings:
       ssh_url: "git@gitea-ssh.gitea.svc.cluster.local:myuser/my-argocd-tracked-helm-chart-repo"
