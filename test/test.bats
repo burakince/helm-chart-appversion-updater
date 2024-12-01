@@ -71,10 +71,10 @@ teardown() {
   [ "$status" -eq 0 ]
 
   # Verify Chart.yaml was updated correctly
-  run grep "version: $EXPECTED_VERSION" $REPOSITORY/$CHART_PATH/Chart.yaml
+  run grep "version: 0.0.2" $REPOSITORY/$CHART_PATH/Chart.yaml
   [ "$status" -eq 0 ]
 
-  run grep "appVersion: /"$EXPECTED_APP_VERSION"/" $REPOSITORY/$CHART_PATH/Chart.yaml
+  run grep "appVersion: \"eb8b0d81\"" $REPOSITORY/$CHART_PATH/Chart.yaml
   [ "$status" -eq 0 ]
 
   # Verify git commit was made

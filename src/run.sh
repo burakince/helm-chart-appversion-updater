@@ -104,7 +104,7 @@ CHART_VERSION=$(grep '^version:' $CHART_PATH/Chart.yaml | awk '{print $2}')
 CHART_VERSION_NEXT="${CHART_VERSION%.*}.$((${CHART_VERSION##*.}+1))"
 
 sed -i'.bak' -e 's|^version:.*|version: '"$CHART_VERSION_NEXT"'|g' $CHART_PATH/Chart.yaml
-sed -i'.bak' -e 's|^appVersion:.*|appVersion: '/""$IMAGE_TAG"/"'|g' $CHART_PATH/Chart.yaml
+sed -i'.bak' -e 's|^appVersion:.*|appVersion: '\""$IMAGE_TAG"\"'|g' $CHART_PATH/Chart.yaml
 
 if [ "$DEBUG_MODE" = true ] ; then
   cat $CHART_PATH/Chart.yaml
