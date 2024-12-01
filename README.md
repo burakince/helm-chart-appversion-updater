@@ -27,7 +27,7 @@ docker run \
   --rm -it burakince/helm-chart-appversion-updater
 ```
 
-## Drone CI Plugin Usage
+## [Drone CI](https://www.drone.io/) or [Woodpecker CI](https://woodpecker-ci.org/) Plugin Usage
 
 ```
 kind: pipeline
