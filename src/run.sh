@@ -18,16 +18,21 @@ check_command curl
 check_command git
 
 DEBUG_MODE="${PLUGIN_DEBUG:-false}"
+TEST_MODE="${PLUGIN_TEST:-false}"
 
 URL="${PLUGIN_SSH_URL:?SSH URL empty or unset}"
 
 SSH_KEY="${PLUGIN_SSH_KEY:?SSH Key empty or unset}"
-echo -n "$SSH_KEY" > ~/.ssh/id_rsa
-chmod 600 ~/.ssh/id_rsa
+SSH_FOLDER="${PLUGIN_SSH_FOLDER:-~/.ssh}"
+SSH_PRIVATE_KEY_FILE="${PLUGIN_SSH_PRIVATE_KEY_FILE:-$SSH_FOLDER/id_rsa}"
+SSH_KNOWN_HOSTS_FILE="${PLUGIN_KNOWN_HOSTS_FILE:-$SSH_FOLDER/known_hosts}"
+
+echo -n "$SSH_KEY" > $SSH_PRIVATE_KEY_FILE
+chmod 600 $SSH_PRIVATE_KEY_FILE
 
 if [ "$DEBUG_MODE" = true ] ; then
-  cat  ~/.ssh/id_rsa
-  ls -al  ~/.ssh/
+  cat $SSH_PRIVATE_KEY_FILE
+  ls -al $SSH_FOLDER
 fi
 
 HOSTNAME=""
@@ -36,12 +41,13 @@ REPOSITORY=""
 
 REGEX="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
 
-if [[ $URL =~ $REGEX ]]; then    
+if [[ $URL =~ $REGEX ]]; then
   protocol=${BASH_REMATCH[1]}
   separator=${BASH_REMATCH[2]}
   HOSTNAME=${BASH_REMATCH[3]}
   USER=${BASH_REMATCH[4]}
   REPOSITORY=${BASH_REMATCH[5]}
+  REPOSITORY="${REPOSITORY%.git}"
 
   if [ "$DEBUG_MODE" = true ] ; then
     echo $protocol
@@ -56,25 +62,29 @@ if [[ $URL =~ $REGEX ]]; then
     exit 1
   fi
 else
-  echo "SSH URL is invalid!"
+  echo "SSH URL is invalid! URL is $URL"
   exit 1
 fi
 
-ssh-keyscan -t rsa $HOSTNAME >> ~/.ssh/known_hosts
-
-if [ "$DEBUG_MODE" = true ] ; then
-  cat ~/.ssh/known_hosts
+if [ "$TEST_MODE" = false ] ; then
+  ssh-keyscan -t rsa $HOSTNAME >> $SSH_KNOWN_HOSTS_FILE
 fi
 
-EMAIL="${PLUGIN_EMAIL:?User email empty or unset}"
-git config --global user.email "$EMAIL"
-NAME="${PLUGIN_NAME:?User name empty or unset}"
-git config --global user.name "$NAME"
+if [ "$DEBUG_MODE" = true ] ; then
+  cat $SSH_KNOWN_HOSTS_FILE
+fi
 
 IMAGE_TAG="${PLUGIN_IMAGE_TAG:?Image tag empty or unset}"
-rm -rf $REPOSITORY
-git clone git@$HOSTNAME:$USER/$REPOSITORY.git
+if [ "$TEST_MODE" = false ] ; then
+  rm -rf $REPOSITORY
+  git clone git@$HOSTNAME:$USER/$REPOSITORY.git
+fi
 cd $REPOSITORY
+
+EMAIL="${PLUGIN_EMAIL:?User email empty or unset}"
+git config user.email "$EMAIL"
+NAME="${PLUGIN_NAME:?User name empty or unset}"
+git config user.name "$NAME"
 
 if [ "$DEBUG_MODE" = true ] ; then
   ls -al
@@ -94,7 +104,7 @@ CHART_VERSION=$(grep '^version:' $CHART_PATH/Chart.yaml | awk '{print $2}')
 CHART_VERSION_NEXT="${CHART_VERSION%.*}.$((${CHART_VERSION##*.}+1))"
 
 sed -i'.bak' -e 's|^version:.*|version: '"$CHART_VERSION_NEXT"'|g' $CHART_PATH/Chart.yaml
-sed -i'.bak' -e 's|^appVersion:.*|appVersion: '"$IMAGE_TAG"'|g' $CHART_PATH/Chart.yaml
+sed -i'.bak' -e 's|^appVersion:.*|appVersion: '/""$IMAGE_TAG"/"'|g' $CHART_PATH/Chart.yaml
 
 if [ "$DEBUG_MODE" = true ] ; then
   cat $CHART_PATH/Chart.yaml
@@ -103,5 +113,9 @@ fi
 echo "Commiting chart source changes to $CURRENT_BRANCH branch"
 git add $CHART_PATH/Chart.yaml
 git commit --message "Update image version to $IMAGE_TAG"
-git push --set-upstream origin $CURRENT_BRANCH
+
+if [ "$TEST_MODE" = false ] ; then
+  git push --set-upstream origin $CURRENT_BRANCH
+fi
+
 cd -
