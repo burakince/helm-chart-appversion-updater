@@ -5,4 +5,4 @@ RUN mkdir -p /root/.ssh
 
 COPY run.sh /bin/
 
-ENTRYPOINT /bin/run.sh
+ENTRYPOINT ["/bin/run.sh"]
