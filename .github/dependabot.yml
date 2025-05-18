@@ -13,8 +13,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    reviewers:
-      - "burakince"
     groups:
       actions-deps:
         patterns:
@@ -24,5 +22,3 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    reviewers:
-      - "burakince"
