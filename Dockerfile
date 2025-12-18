@@ -1,4 +1,4 @@
-FROM alpine:3.23.0
+FROM alpine:3.23.2
 
 RUN apk -Uuv add bash ca-certificates git curl jq openssh
 RUN mkdir -p /root/.ssh
